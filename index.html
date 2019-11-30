@@ -213,8 +213,8 @@
         <div className="password">
           <div className="password password__inputBox">
             <input autoComplete="off" className="password__input" readOnly={true} ref={inputRef} spellCheck={false} type="text" value={password} />
-            <div className="password password__mask">{mask1}</div>
-            <div className="password password__mask">{mask2}</div>
+            <nobr className="password password__mask">{mask1}</nobr>
+            <nobr className="password password__mask">{mask2}</nobr>
           </div>
           <button onClick={handleCopyClick} type="button">Copy</button>
         </div>
