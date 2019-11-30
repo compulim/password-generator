@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+  <title>Generate password</title>
+  <script crossorigin="anonymous" src="https://unpkg.com/@babel/standalone@7.6.2/babel.min.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/react@16.8.6/umd/react.development.js"></script>
+  <script crossorigin="anonymous" src="https://unpkg.com/react-dom@16.8.6/umd/react-dom.development.js"></script>
+  <script src="math-random-1.0.4.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    code, .code {
+      font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+        monospace;
+    }
+
+    #root {
+      margin: 1em;
+    }
+
+    .cryptoCheck {
+      color: White;
+    }
+
+    .cryptoCheck--good {
+      background-color: Green;
+      padding: .3em .4em;
+    }
+
+    .cryptoCheck--bad {
+      background-color: Red;
+      padding: .3em .4em;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useCallback, useEffect, useMemo, useRef, useState } = React;
+    const STANDARD_CHAR_SET = 'abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const CHAR_SET_WITH_SYMBOLS = STANDARD_CHAR_SET + '`~!@#$%^&*()-=_+[]\{}|;\':",./<>?';
+    const DEFAULT_LENGTH = 16;
+    const ROTATE_INTERVAL = 100;
+
+    function getRandomChar(charSet) {
+      return charSet.charAt(~~(MathRandom() * charSet.length));
+    }
+
+    function generatePassword(charSet, length) {
+      return new Array(length).fill('').map(() => getRandomChar(charSet)).join('');
+    }
+
+    function useInterval(fn, intervalInMS) {
+      useEffect(() => {
+        if (fn) {
+          const interval = setInterval(fn, intervalInMS);
+
+          return () => clearInterval(interval);
+        }
+      }, [fn, intervalInMS]);
+    }
+
+    const Password = ({ password }) => {
+      const inputRef = useRef();
+      const handleCopyClick = useCallback(() => {
+        const { current } = inputRef;
+
+        current.select();
+        current.setSelectionRange(0, password.length);
+
+        document.execCommand('copy');
+      }, [inputRef, password]);
+
+      return (
+        <React.Fragment>
+          <input autoComplete="off" className="code" readOnly={true} ref={inputRef} spellCheck={false} type="text" value={password} />
+          <button onClick={handleCopyClick}>Copy</button>
+        </React.Fragment>
+      );
+    };
+
+    const RotatingPassword = ({ charSet, length }) => {
+      const [password, setPassword] = useState('');
+
+      useInterval(
+        () => setPassword(generatePassword(charSet, length)),
+        ROTATE_INTERVAL
+      );
+
+      return (
+        <Password password={password} />
+      );
+    };
+
+    const App = () => {
+      const [length, setLength] = useState(DEFAULT_LENGTH);
+
+      return (
+        <React.Fragment>
+          <h1>Generate password</h1>
+          <section className="cryptoCheck">
+            {
+              window.MathRandom.cryptographic ?
+                <p className="cryptoCheck--good">Using in-browser cryptographically-strong random number generator.</p>
+              :
+                <p className="cryptoCheck--bad">Your browser do not support cryptography, the password generated will be weak.</p>
+            }
+          </section>
+          <section>
+            <header>
+              <h2>Alphanumeric Password</h2>
+            </header>
+            <RotatingPassword charSet={STANDARD_CHAR_SET} length={length} />
+          </section>
+          <section>
+            <header>
+              <h2>Extended Password</h2>
+            </header>
+            <RotatingPassword charSet={CHAR_SET_WITH_SYMBOLS} length={length} />
+          </section>
+        </React.Fragment>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
