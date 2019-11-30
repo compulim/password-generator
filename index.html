@@ -85,7 +85,7 @@
 
     .password .password__input {
       border: solid 1px #CCC;
-      color: Black;
+      color: Transparent;
       font-size: 16px;
       outline: 0;
       padding: 2px;
@@ -134,13 +134,15 @@
 
         document.execCommand('copy');
       }, [inputRef, password]);
-      const mask = useMemo(() => generatePassword(STANDARD_CHAR_SET, password.length), [password]);
+      const mask1 = useMemo(() => generatePassword(STANDARD_CHAR_SET, password.length), [password]);
+      const mask2 = useMemo(() => generatePassword(STANDARD_CHAR_SET, password.length), [password]);
 
       return (
         <div className="password">
           <div className="password password__inputBox">
             <input autoComplete="off" className="password__input" readOnly={true} ref={inputRef} spellCheck={false} type="text" value={password} />
-            <div className="password password__mask">{mask}</div>
+            <div className="password password__mask">{mask1}</div>
+            <div className="password password__mask">{mask2}</div>
           </div>
           <button onClick={handleCopyClick}>Copy</button>
         </div>
