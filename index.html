@@ -132,8 +132,58 @@
       return charSet.charAt(~~(MathRandom() * charSet.length));
     }
 
-    function generatePassword(charSet, length) {
-      return new Array(length).fill('').map(() => getRandomChar(charSet)).join('');
+    function generatePassword(charSet, length, complexity) {
+      if (!length) {
+        return '';
+      }
+
+      let count = 10000;
+      let password;
+
+      do {
+        password = new Array(length || DEFAULT_LENGTH).fill('').map(() => getRandomChar(charSet)).join('');
+      } while (!complexity(password) && --count > 0);
+
+      return password;
+    }
+
+    function countPattern(str, pattern) {
+      pattern = new RegExp(pattern, 'g')
+
+      let count = 0;
+
+      while (pattern.exec(str)) {
+        count++;
+      }
+
+      return count;
+    }
+
+    function standardComplexity(password) {
+      const lowerCaseCount = countPattern(password, /[a-z]/);
+      const numericCount = countPattern(password, /[0-9]/);
+      const upperCaseCount = countPattern(password, /[A-Z]/);
+
+      return (
+        lowerCaseCount >= 1
+        && numericCount >= 1
+        && upperCaseCount >= 1
+      )
+    }
+
+    function extendedComplexity(password) {
+      const lowerCaseCount = countPattern(password, /[a-z]/);
+      const numericCount = countPattern(password, /[0-9]/);
+      const upperCaseCount = countPattern(password, /[A-Z]/);
+
+      const symbolCount = password.length - lowerCaseCount - numericCount - upperCaseCount;
+
+      return (
+        lowerCaseCount >= 1
+        && numericCount >= 1
+        && symbolCount >= 1
+        && upperCaseCount >= 1
+      )
     }
 
     function useInterval(fn, intervalInMS) {
@@ -146,7 +196,7 @@
       }, [fn, intervalInMS]);
     }
 
-    const Password = ({ password }) => {
+    const Password = ({ charSet, complexity, password = '' }) => {
       const inputRef = useRef();
       const handleCopyClick = useCallback(() => {
         const { current } = inputRef;
@@ -156,8 +206,8 @@
 
         document.execCommand('copy');
       }, [inputRef, password]);
-      const mask1 = useMemo(() => generatePassword(STANDARD_CHAR_SET, password.length), [password]);
-      const mask2 = useMemo(() => generatePassword(STANDARD_CHAR_SET, password.length), [password]);
+      const mask1 = useMemo(() => generatePassword(charSet, password.length, complexity), [password]);
+      const mask2 = useMemo(() => generatePassword(charSet, password.length, complexity), [password]);
 
       return (
         <div className="password">
@@ -171,16 +221,16 @@
       );
     };
 
-    const RotatingPassword = ({ charSet, length }) => {
+    const RotatingPassword = ({ charSet, complexity, length }) => {
       const [password, setPassword] = useState('');
 
       useInterval(
-        () => setPassword(generatePassword(charSet, length)),
+        () => setPassword(generatePassword(charSet, length, complexity)),
         ROTATE_INTERVAL
       );
 
       return (
-        <Password password={password} />
+        <Password charSet={charSet} complexity={complexity} password={password} />
       );
     };
 
@@ -214,10 +264,10 @@
             <header>
               <h2>Alphanumeric Password</h2>
             </header>
-            <RotatingPassword charSet={STANDARD_CHAR_SET} length={length} />
+            <RotatingPassword charSet={STANDARD_CHAR_SET} complexity={standardComplexity} length={length} />
             <div className="generatedPassword__charSet">
               <small>
-                (Including <code>{STANDARD_CHAR_SET}</code>)
+                (1 lowercase, 1 uppercase, and 1 numeric letter, including <code>{STANDARD_CHAR_SET}</code>)
               </small>
             </div>
           </section>
@@ -225,10 +275,10 @@
             <header>
               <h2>Extended Password</h2>
             </header>
-            <RotatingPassword charSet={CHAR_SET_WITH_SYMBOLS} length={length} />
+            <RotatingPassword charSet={CHAR_SET_WITH_SYMBOLS} complexity={extendedComplexity} length={length} />
             <div className="generatedPassword__charSet">
               <small>
-                (Including <code>{CHAR_SET_WITH_SYMBOLS}</code>)
+                (1 lowercase, 1 uppercase, 1 numeric letter, and 1 non-alphanumeric, including <code>{CHAR_SET_WITH_SYMBOLS}</code>)
               </small>
             </div>
           </section>
