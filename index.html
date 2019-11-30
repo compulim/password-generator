@@ -40,7 +40,9 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    code, .password__input {
+    code,
+    .password .password__input,
+    .password .password__mask {
       font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
     }
@@ -63,11 +65,33 @@
       padding: .3em .4em;
     }
 
-    .password__input {
-      outline: 0;
+    .password {
+      display: flex;
     }
 
-    .password__input::selection {
+    .password .password__inputBox {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .password .password__mask {
+      border: solid 1px Transparent;
+      font-size: 16px;
+      left: 0;
+      padding: 2px;
+      position: absolute;
+      top: 0;
+    }
+
+    .password .password__input {
+      border: solid 1px #CCC;
+      color: Black;
+      font-size: 16px;
+      outline: 0;
+      padding: 2px;
+    }
+
+    .password .password__input::selection {
       background-color: initial;
     }
   </style>
@@ -110,12 +134,16 @@
 
         document.execCommand('copy');
       }, [inputRef, password]);
+      const mask = useMemo(() => generatePassword(STANDARD_CHAR_SET, password.length), [password]);
 
       return (
-        <React.Fragment>
-          <input autoComplete="off" className="password__input" readOnly={true} ref={inputRef} spellCheck={false} type="text" value={password} />
+        <div className="password">
+          <div className="password password__inputBox">
+            <input autoComplete="off" className="password__input" readOnly={true} ref={inputRef} spellCheck={false} type="text" value={password} />
+            <div className="password password__mask">{mask}</div>
+          </div>
           <button onClick={handleCopyClick}>Copy</button>
-        </React.Fragment>
+        </div>
       );
     };
 
