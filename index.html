@@ -69,9 +69,19 @@
       display: flex;
     }
 
+    .password .password__input {
+      border: solid 1px #CCC;
+      color: Transparent;
+      font-size: 16px;
+      outline: 0;
+      padding: 2px;
+      width: 100%;
+    }
+
     .password .password__inputBox {
       overflow: hidden;
       position: relative;
+      width: 100%;
     }
 
     .password .password__mask {
@@ -83,16 +93,16 @@
       top: 0;
     }
 
-    .password .password__input {
-      border: solid 1px #CCC;
-      color: Transparent;
-      font-size: 16px;
-      outline: 0;
-      padding: 2px;
-    }
-
     .password .password__input::selection {
       background-color: initial;
+    }
+
+    .passwordLength .passwordLength__box {
+      display: flex;
+    }
+
+    .passwordLength .passwordLength__text {
+      margin-left: .4em;
     }
   </style>
 </head>
@@ -103,7 +113,7 @@
     const { useCallback, useEffect, useMemo, useRef, useState } = React;
     const STANDARD_CHAR_SET = 'abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const CHAR_SET_WITH_SYMBOLS = STANDARD_CHAR_SET + '`~!@#$%^&*()-=_+[]\{}|;\':",./<>?';
-    const DEFAULT_LENGTH = 16;
+    const DEFAULT_LENGTH = 12;
     const ROTATE_INTERVAL = 33;
 
     function getRandomChar(charSet) {
@@ -164,6 +174,7 @@
 
     const App = () => {
       const [length, setLength] = useState(DEFAULT_LENGTH);
+      const handleLengthChange = useCallback(({ target: { value } }) => setLength(+value || DEFAULT_LENGTH));
 
       return (
         <React.Fragment>
@@ -175,6 +186,17 @@
               :
                 <p className="cryptoCheck--bad">Your browser do not support cryptography, the password generated will be weak.</p>
             }
+          </section>
+          <section>
+            <header>
+              <h2>Length</h2>
+            </header>
+            <div className="passwordLength">
+              <label className="passwordLength__box">
+                <input min={8} max={32} onChange={handleLengthChange} step={4} type="range" value={length} />
+                <span className="passwordLength__text">{length} letters</span>
+              </label>
+            </div>
           </section>
           <section>
             <header>
