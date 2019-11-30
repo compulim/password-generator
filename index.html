@@ -144,7 +144,7 @@
         password = new Array(length || DEFAULT_LENGTH).fill('').map(() => getRandomChar(charSet)).join('');
       } while (!complexity(password) && --count > 0);
 
-      return password;
+      return count <= 0 ? '' : password;
     }
 
     function countPattern(str, pattern) {
