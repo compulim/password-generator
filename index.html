@@ -3,6 +3,7 @@
 <html lang="en-US">
 
 <head>
+  <meta name="viewport" content="width=device-width" />
   <title>In-browser Password Generator</title>
   <script
     crossorigin="anonymous"
@@ -55,14 +56,18 @@
       color: White;
     }
 
+    .cryptoCheck--bad {
+      background-color: Red;
+      padding: .3em .4em;
+    }
+
     .cryptoCheck--good {
       background-color: Green;
       padding: .3em .4em;
     }
 
-    .cryptoCheck--bad {
-      background-color: Red;
-      padding: .3em .4em;
+    .generatedPassword .generatedPassword__charSet code {
+      word-break: break-all;
     }
 
     .password {
@@ -198,23 +203,23 @@
               </label>
             </div>
           </section>
-          <section>
+          <section className="generatedPassword">
             <header>
               <h2>Alphanumeric Password</h2>
             </header>
             <RotatingPassword charSet={STANDARD_CHAR_SET} length={length} />
-            <div>
+            <div className="generatedPassword__charSet">
               <small>
                 (Including <code>{STANDARD_CHAR_SET}</code>)
               </small>
             </div>
           </section>
-          <section>
+          <section className="generatedPassword">
             <header>
               <h2>Extended Password</h2>
             </header>
             <RotatingPassword charSet={CHAR_SET_WITH_SYMBOLS} length={length} />
-            <div>
+            <div className="generatedPassword__charSet">
               <small>
                 (Including <code>{CHAR_SET_WITH_SYMBOLS}</code>)
               </small>
