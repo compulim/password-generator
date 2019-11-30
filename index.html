@@ -71,6 +71,7 @@
     }
 
     .password {
+      align-items: center;
       display: flex;
     }
 
@@ -163,7 +164,7 @@
             <div className="password password__mask">{mask1}</div>
             <div className="password password__mask">{mask2}</div>
           </div>
-          <button onClick={handleCopyClick}>Copy</button>
+          <button onClick={handleCopyClick} type="button">Copy</button>
         </div>
       );
     };
