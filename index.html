@@ -3,10 +3,22 @@
 <html lang="en-US">
 
 <head>
-  <title>Generate password</title>
-  <script crossorigin="anonymous" src="https://unpkg.com/@babel/standalone@7.6.2/babel.min.js"></script>
-  <script crossorigin="anonymous" src="https://unpkg.com/react@16.8.6/umd/react.development.js"></script>
-  <script crossorigin="anonymous" src="https://unpkg.com/react-dom@16.8.6/umd/react-dom.development.js"></script>
+  <title>In-browser Password Generator</title>
+  <script
+    crossorigin="anonymous"
+    integrity="sha384-RgqcpcCUZic7C19UJ9kun5UxtA3yzs8+YmqNHCFEFEDx0uQG3+PhmppAo66Gv1Ub"
+    src="https://unpkg.com/@babel/standalone@7.6.2/babel.min.js"
+  ></script>
+  <script
+    crossorigin="anonymous"
+    integrity="sha384-u6DTDagyAFm2JKvgGBO8jWd9YzrDzg6FuBPKWkKIg0/GVA6HM9UkSxH2rzxEJ5GF"
+    src="https://unpkg.com/react@16.8.6/umd/react.development.js"
+  ></script>
+  <script
+    crossorigin="anonymous"
+    integrity="sha384-G/zTlGEEkXuMHnwn+hHOFgqXlmVzCrNtkHQ3dsC7fGuev0FrrS44zmi3VXEwfw/S"
+    src="https://unpkg.com/react-dom@16.8.6/umd/react-dom.development.js"
+  ></script>
   <script src="math-random-1.0.4.js"></script>
   <style>
     body {
@@ -108,7 +120,7 @@
 
       return (
         <React.Fragment>
-          <h1>Generate password</h1>
+          <h1>In-browser Password Generator</h1>
           <section className="cryptoCheck">
             {
               window.MathRandom.cryptographic ?
@@ -122,12 +134,22 @@
               <h2>Alphanumeric Password</h2>
             </header>
             <RotatingPassword charSet={STANDARD_CHAR_SET} length={length} />
+            <div>
+              <small>
+                (Including <code>{STANDARD_CHAR_SET}</code>)
+              </small>
+            </div>
           </section>
           <section>
             <header>
               <h2>Extended Password</h2>
             </header>
             <RotatingPassword charSet={CHAR_SET_WITH_SYMBOLS} length={length} />
+            <div>
+              <small>
+                (Including <code>{CHAR_SET_WITH_SYMBOLS}</code>)
+              </small>
+            </div>
           </section>
         </React.Fragment>
       );
