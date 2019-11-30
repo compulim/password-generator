@@ -106,6 +106,10 @@
       display: flex;
     }
 
+    .passwordLength .passwordLength__input {
+      flex: 1;
+    }
+
     .passwordLength .passwordLength__text {
       margin-left: .4em;
     }
@@ -192,13 +196,13 @@
                 <p className="cryptoCheck--bad">Your browser do not support cryptography, the password generated will be weak.</p>
             }
           </section>
-          <section>
+          <section className="passwordLength">
             <header>
               <h2>Length</h2>
             </header>
-            <div className="passwordLength">
+            <div>
               <label className="passwordLength__box">
-                <input min={8} max={32} onChange={handleLengthChange} step={4} type="range" value={length} />
+                <input className="passwordLength__input" min={8} max={32} onChange={handleLengthChange} step={4} type="range" value={length} />
                 <span className="passwordLength__text">{length} letters</span>
               </label>
             </div>
