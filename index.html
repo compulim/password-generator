@@ -6,6 +6,11 @@
   <title>In-browser Password Generator</title>
   <script
     crossorigin="anonymous"
+    integrity="sha384-Fbe31ZqFxktD++WKw92rzNU9ROzGC0taO0LK7GrLloHkGRmL60n7Rp4gauiM2cfr"
+    src="https://unpkg.com/@babel/polyfill@7.7.0/dist/polyfill.min.js"
+  ></script>
+  <script
+    crossorigin="anonymous"
     integrity="sha384-RgqcpcCUZic7C19UJ9kun5UxtA3yzs8+YmqNHCFEFEDx0uQG3+PhmppAo66Gv1Ub"
     src="https://unpkg.com/@babel/standalone@7.6.2/babel.min.js"
   ></script>
@@ -35,7 +40,7 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    code, .code {
+    code, .password__input {
       font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
     }
@@ -57,6 +62,14 @@
       background-color: Red;
       padding: .3em .4em;
     }
+
+    .password__input {
+      outline: 0;
+    }
+
+    .password__input::selection {
+      background-color: initial;
+    }
   </style>
 </head>
 
@@ -67,7 +80,7 @@
     const STANDARD_CHAR_SET = 'abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const CHAR_SET_WITH_SYMBOLS = STANDARD_CHAR_SET + '`~!@#$%^&*()-=_+[]\{}|;\':",./<>?';
     const DEFAULT_LENGTH = 16;
-    const ROTATE_INTERVAL = 100;
+    const ROTATE_INTERVAL = 33;
 
     function getRandomChar(charSet) {
       return charSet.charAt(~~(MathRandom() * charSet.length));
@@ -100,7 +113,7 @@
 
       return (
         <React.Fragment>
-          <input autoComplete="off" className="code" readOnly={true} ref={inputRef} spellCheck={false} type="text" value={password} />
+          <input autoComplete="off" className="password__input" readOnly={true} ref={inputRef} spellCheck={false} type="text" value={password} />
           <button onClick={handleCopyClick}>Copy</button>
         </React.Fragment>
       );
